@@ -1,0 +1,152 @@
+# Example Backstage Configuration for Cloudflare Plugin
+
+# Cloudflare Configuration
+cloudflare:
+  # Required: Your Cloudflare account ID
+  # Find this in your Cloudflare dashboard: https://dash.cloudflare.com/
+  accountId: ${CLOUDFLARE_ACCOUNT_ID}
+  
+  # Required: API Token with read permissions
+  # Create at: https://dash.cloudflare.com/profile/api-tokens
+  # Recommended permissions:
+  #   - Account Settings: Read
+  #   - Workers Scripts: Read
+  #   - Workers KV Storage: Read
+  #   - Workers R2 Storage: Read
+  #   - D1: Read
+  #   - Zero Trust: Read
+  #   - Analytics: Read
+  apiToken:
+    $env: CLOUDFLARE_API_TOKEN
+  
+  # Optional: HTTP fetch configuration
+  fetch:
+    # Request timeout in milliseconds (default: 15000)
+    timeoutMs: 15000
+    
+    # Maximum retry attempts for failed requests (default: 3)
+    maxRetries: 3
+    
+    # Backoff strategy: "jitter" or "exponential" (default: jitter)
+    backoff: jitter
+  
+  # Optional: Entity Provider configuration
+  # Controls automatic resource discovery and catalog integration
+  entityProvider:
+    # Discovery schedule
+    schedule:
+      # How often to sync resources (default: every 10 minutes)
+      frequency:
+        minutes: 10
+      
+      # Maximum time for a sync operation (default: 2 minutes)
+      timeout:
+        minutes: 2
+    
+    # Control which resources to import
+    # Set to false to disable specific resource types
+    import:
+      workers: true
+      pages: true
+      queues: true
+      kv: true
+      d1: true
+      r2: true
+      aiGateway: true
+      vectorize: true
+      analyticsEngine: true
+      secretsStore: true
+      hyperdrive: true
+      containers: true
+      workflows: true
+      durableObjects: true
+      aiSearch: true
+      browserRendering: true
+    
+    # Default owner for discovered resources
+    # Override with resource-specific annotations
+    defaultOwner: platform-team
+    
+    # Default system for grouping resources
+    # Override with resource-specific annotations
+    defaultSystem: cloudflare-prod
+
+# Backstage Backend Configuration
+backend:
+  # Base URL for the backend
+  baseUrl: http://localhost:7007
+  
+  # CORS configuration
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, POST, PUT, DELETE]
+    credentials: true
+
+# Catalog Configuration
+catalog:
+  # Enable processing of Cloudflare entities
+  locations:
+    # Example: Import components that reference Cloudflare resources
+    - type: url
+      target: https://github.com/your-org/your-repo/blob/main/catalog-info.yaml
+
+# Permission Framework (future enhancement)
+permission:
+  enabled: true
+  
+  # Example policy for Cloudflare resources
+  # Uncomment when implementing permissions
+  # policy:
+  #   - permission: cloudflare.read.workers
+  #     allow:
+  #       - group:default/platform
+  #       - group:default/engineering
+  #   
+  #   - permission: cloudflare.read.secretsstore.meta
+  #     allow:
+  #       - group:default/platform
+  #       - group:default/security
+  #   
+  #   - permission: cloudflare.export.evidence
+  #     allow:
+  #       - group:default/security
+  #       - group:default/compliance
+
+# Tech Insights Configuration (future enhancement)
+# techInsights:
+#   schedule:
+#     frequency:
+#       hours: 1
+#     timeout:
+#       minutes: 5
+#   
+#   checks:
+#     # Access Hygiene
+#     - id: cloudflare-no-global-api-key
+#       name: No Global API Key Usage
+#       description: Ensures only API tokens are used, not Global API Keys
+#       
+#     - id: cloudflare-deployment-provenance
+#       name: Deployment Provenance
+#       description: All prod deployments have commit SHA and CI run URL
+#       
+#     - id: cloudflare-r2-lifecycle-rules
+#       name: R2 Lifecycle Rules
+#       description: All regulated data buckets have lifecycle rules
+#       
+#     - id: cloudflare-resource-coverage
+#       name: Resource Coverage
+#       description: ≥95% of prod components have Cloudflare resource relations
+
+# Example Environment Variables
+# 
+# Set these in your environment or .env file:
+# 
+# CLOUDFLARE_ACCOUNT_ID=your-account-id-here
+# CLOUDFLARE_API_TOKEN=your-api-token-here
+# 
+# For production, use secret management:
+# - Kubernetes Secrets
+# - AWS Secrets Manager
+# - HashiCorp Vault
+# - etc.
