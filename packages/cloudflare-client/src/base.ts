@@ -52,7 +52,7 @@ export class CloudflareBaseClient {
 
         clearTimeout(timeoutId);
 
-        const data = await response.json();
+        const data = (await response.json()) as unknown;
 
         if (!response.ok) {
           throw new Error(

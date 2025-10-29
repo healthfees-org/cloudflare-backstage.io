@@ -1,5 +1,6 @@
 import { CloudflareBaseClient } from './base';
 import { CfAccessAudit } from './types';
+import { createHash } from 'crypto';
 
 /**
  * Client for Cloudflare Zero Trust API
@@ -48,8 +49,8 @@ export class ZeroTrustClient extends CloudflareBaseClient {
     const timestamp = new Date().toISOString();
     const dataStr = JSON.stringify({ logs, timestamp, params }, null, 2);
     
-    // Simple hash calculation (in production, use crypto.createHash)
-    const hash = Buffer.from(dataStr).toString('base64').substring(0, 16);
+    // Use SHA256 for proper integrity verification
+    const hash = createHash('sha256').update(dataStr).digest('hex');
 
     return {
       data: logs,

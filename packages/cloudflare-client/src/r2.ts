@@ -1,5 +1,6 @@
 import { CloudflareBaseClient } from './base';
 import { CfR2Bucket, CfR2Lifecycle } from './types';
+import { createHash } from 'crypto';
 
 /**
  * Client for Cloudflare R2 API
@@ -53,8 +54,8 @@ export class R2Client extends CloudflareBaseClient {
     const timestamp = new Date().toISOString();
     const dataStr = JSON.stringify({ lifecycle, timestamp }, null, 2);
     
-    // Simple hash calculation (in production, use crypto.createHash)
-    const hash = Buffer.from(dataStr).toString('base64').substring(0, 16);
+    // Use SHA256 for proper integrity verification
+    const hash = createHash('sha256').update(dataStr).digest('hex');
 
     return {
       data: lifecycle,
