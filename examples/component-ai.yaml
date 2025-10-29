@@ -1,0 +1,51 @@
+# Example: Component with AI/ML Cloudflare Services
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: acme-ai-service
+  description: ACME AI service using Cloudflare AI services
+  annotations:
+    # Link to Cloudflare Worker
+    cloudflare.com/worker: acme-ai-worker
+    
+    # Link to AI Gateway for LLM requests
+    cloudflare.com/ai-gateway: acme-ai-gateway
+    
+    # Link to Vectorize index for embeddings
+    cloudflare.com/vectorize: acme-idx-main
+    
+    # Link to AI Search index
+    cloudflare.com/ai-search: acme-site-index
+    
+    # Link to R2 for model storage
+    cloudflare.com/r2: acme-ai-models
+    
+    # GitHub repository
+    github.com/project-slug: acme-org/acme-ai
+    
+    # TechDocs
+    backstage.io/techdocs-ref: dir:./docs
+  tags:
+    - ai
+    - ml
+    - cloudflare
+    - workers
+    - vectorize
+  links:
+    - url: https://acme-ai.your-domain.workers.dev
+      title: AI API
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: ai-team
+  system: acme-ai-system
+  
+  # Dependencies
+  dependsOn:
+    - resource:default/cf-worker-acme-ai-worker
+    - resource:default/cf-ai-gateway-acme-ai-gateway
+    - resource:default/cf-vectorize-acme-idx-main
+    - resource:default/cf-ai-search-acme-site-index
+    - resource:default/cf-r2-acme-ai-models

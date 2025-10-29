@@ -1,0 +1,26 @@
+# Example: System grouping multiple Cloudflare-powered components
+
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: acme-system
+  description: ACME production system running on Cloudflare
+  tags:
+    - cloudflare
+    - production
+  links:
+    - url: https://dash.cloudflare.com
+      title: Cloudflare Dashboard
+      icon: dashboard
+spec:
+  owner: platform-team
+  domain: acme-domain
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: acme-domain
+  description: ACME organization domain
+spec:
+  owner: platform-team
