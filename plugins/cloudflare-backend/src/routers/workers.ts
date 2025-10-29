@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { Logger } from 'winston';
-import { CloudflareClient } from '@internal/cloudflare-client';
+import { CloudflareClient } from '../cloudflare-client';
 import NodeCache from 'node-cache';
 
 export interface RouterOptions {
