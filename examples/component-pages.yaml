@@ -1,0 +1,42 @@
+# Example: Component with Cloudflare Pages
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: acme-web
+  description: ACME web application hosted on Cloudflare Pages
+  annotations:
+    # Link to the Cloudflare Pages project
+    cloudflare.com/pages: acme-web
+    
+    # Link to R2 bucket for static assets
+    cloudflare.com/r2: acme-prod-assets
+    
+    # GitHub repository
+    github.com/project-slug: acme-org/acme-web
+    
+    # TechDocs
+    backstage.io/techdocs-ref: dir:./docs
+  tags:
+    - web
+    - cloudflare
+    - pages
+    - frontend
+  links:
+    - url: https://acme-web.pages.dev
+      title: Production Site
+      icon: web
+    - url: https://www.acme-org.com
+      title: Custom Domain
+      icon: web
+spec:
+  type: website
+  lifecycle: production
+  owner: frontend-team
+  system: acme-system
+  
+  # Dependencies
+  dependsOn:
+    - resource:default/cf-pages-acme-web
+    - resource:default/cf-r2-acme-prod-assets
+    - component:default/acme-api

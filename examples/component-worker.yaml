@@ -1,0 +1,45 @@
+# Example: Component with Cloudflare Worker
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: acme-api
+  description: ACME API service powered by Cloudflare Workers
+  annotations:
+    # Link to the Cloudflare Worker
+    cloudflare.com/worker: acme-api
+    
+    # Link to KV namespace used by this worker
+    cloudflare.com/kv: acme-cache
+    
+    # Link to D1 database
+    cloudflare.com/d1: acme-core
+    
+    # Link to Queue for async processing
+    cloudflare.com/queue: acme-events
+    
+    # GitHub repository
+    github.com/project-slug: acme-org/acme-api
+    
+    # TechDocs
+    backstage.io/techdocs-ref: dir:./docs
+  tags:
+    - api
+    - cloudflare
+    - workers
+  links:
+    - url: https://acme-api.your-domain.workers.dev
+      title: Production API
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: acme-system
+  
+  # Dependencies
+  dependsOn:
+    - resource:default/cf-worker-acme-api
+    - resource:default/cf-kv-acme-cache
+    - resource:default/cf-d1-acme-core
+    - resource:default/cf-queue-acme-events
